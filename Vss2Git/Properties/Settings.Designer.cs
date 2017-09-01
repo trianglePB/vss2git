@@ -166,5 +166,17 @@ namespace Hpdi.Vss2Git.Properties {
                 this["EmailMapFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CollapsePath {
+            get {
+                return ((bool)(this["CollapsePath"]));
+            }
+            set {
+                this["CollapsePath"] = value;
+            }
+        }
     }
 }

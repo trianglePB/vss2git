@@ -42,6 +42,7 @@ namespace Hpdi.Vss2Git
         private readonly HashSet<string> tagsUsed = new HashSet<string>();
         private bool ignoreErrors = false;
         private string defaultComment = "";
+        private bool collapsePath = false;
 
         private string emailMapFile = "emailmap.xml";
         public string EmailMapFile
@@ -89,6 +90,12 @@ namespace Hpdi.Vss2Git
         {
             get { return defaultComment; }
             set { defaultComment = value; }
+        }
+
+        public bool CollapsePath
+        {
+            get { return collapsePath; }
+            set { collapsePath = value; }
         }
 
         public GitExporter(WorkQueue workQueue, Logger logger,
@@ -221,7 +228,7 @@ namespace Hpdi.Vss2Git
                 // create mappings for root projects
                 foreach (var rootProject in revisionAnalyzer.RootProjects)
                 {
-                    var rootPath = VssPathMapper.GetWorkingPath(repoPath, rootProject.Path);
+                    var rootPath = collapsePath ? repoPath : VssPathMapper.GetWorkingPath(repoPath, rootProject.Path);
                     pathMapper.SetProjectPath(rootProject.PhysicalName, rootPath, rootProject.Path);
                 }
 

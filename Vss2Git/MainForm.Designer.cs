@@ -174,7 +174,7 @@
             // goButton
             // 
             this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.goButton.Location = new System.Drawing.Point(416, 400);
+            this.goButton.Location = new System.Drawing.Point(416, 424);
             this.goButton.Name = "goButton";
             this.goButton.Size = new System.Drawing.Size(75, 23);
             this.goButton.TabIndex = 3;
@@ -194,7 +194,7 @@
             this.revisionLabel,
             this.changeLabel,
             this.timeLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 433);
+            this.statusStrip.Location = new System.Drawing.Point(0, 457);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(584, 22);
             this.statusStrip.TabIndex = 5;
@@ -252,7 +252,7 @@
             this.outputGroupBox.Controls.Add(this.logLabel);
             this.outputGroupBox.Location = new System.Drawing.Point(12, 144);
             this.outputGroupBox.Name = "outputGroupBox";
-            this.outputGroupBox.Size = new System.Drawing.Size(560, 169);
+            this.outputGroupBox.Size = new System.Drawing.Size(560, 193);
             this.outputGroupBox.TabIndex = 1;
             this.outputGroupBox.TabStop = false;
             this.outputGroupBox.Text = "Output Settings";
@@ -302,7 +302,7 @@
             // collapsePathCheckBox
             // 
             this.collapsePathCheckBox.AutoSize = true;
-            this.collapsePathCheckBox.Location = new System.Drawing.Point(428, 123);
+            this.collapsePathCheckBox.Location = new System.Drawing.Point(9, 169);
             this.collapsePathCheckBox.Name = "collapsePathCheckBox";
             this.collapsePathCheckBox.Size = new System.Drawing.Size(148, 17);
             this.collapsePathCheckBox.TabIndex = 8;
@@ -385,7 +385,7 @@
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(497, 400);
+            this.cancelButton.Location = new System.Drawing.Point(497, 424);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 4;
@@ -401,7 +401,7 @@
             this.changesetGroupBox.Controls.Add(this.label2);
             this.changesetGroupBox.Controls.Add(this.label1);
             this.changesetGroupBox.Controls.Add(this.anyCommentUpDown);
-            this.changesetGroupBox.Location = new System.Drawing.Point(12, 319);
+            this.changesetGroupBox.Location = new System.Drawing.Point(12, 343);
             this.changesetGroupBox.Name = "changesetGroupBox";
             this.changesetGroupBox.Size = new System.Drawing.Size(560, 75);
             this.changesetGroupBox.TabIndex = 2;
@@ -485,7 +485,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(584, 455);
+            this.ClientSize = new System.Drawing.Size(584, 479);
             this.Controls.Add(this.changesetGroupBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.outputGroupBox);
@@ -493,7 +493,7 @@
             this.Controls.Add(this.vssGroupBox);
             this.Controls.Add(this.statusStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(458, 419);
+            this.MinimumSize = new System.Drawing.Size(458, 443);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "VSS2Git";

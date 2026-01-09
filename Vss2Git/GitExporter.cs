@@ -21,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -55,6 +56,7 @@ namespace Hpdi.Vss2Git
             get { return emailMap; }
             set { emailMap = value; }
         }
+        private bool emailMapLogged = false;
 
         private string emailDomain = "localhost";
         public string EmailDomain
@@ -103,13 +105,55 @@ namespace Hpdi.Vss2Git
             try
             {
                 XDocument xdoc = XDocument.Load(emailMapFile);
-                foreach (var map in xdoc.Elements("map"))
+                var root = xdoc.Root;
+                if (root == null)
                 {
-                    emailMap.Add(map.Attribute("name").Value.ToLower(), map.Attribute("email").Value);
+                    logger.WriteLine("Email map file has no root element: {0}", emailMapFile);
+                    return false;
                 }
+                bool anyValid = false;
+                foreach (var map in root.Elements("map"))
+                {
+                    var nameAttr = map.Attribute("name");
+                    var emailAttr = map.Attribute("email");
+                    if (nameAttr == null || emailAttr == null)
+                    {
+                        continue;
+                    }
+                    var name = nameAttr.Value;
+                    var email = emailAttr.Value;
+                    if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email))
+                    {
+                        continue;
+                    }
+                    emailMap.Add(name.ToLowerInvariant(), email);
+                    anyValid = true;
+                    if (!emailMapLogged)
+                    {
+                        logger.WriteLine("Email map: {0} -> {1}", name, email);
+                    }
+                }
+                if (!anyValid)
+                {
+                    logger.WriteLine("Email map file contains no valid mappings: {0}", emailMapFile);
+                }
+                emailMapLogged = true;
             }
             catch (FileNotFoundException)
             {
+                logger.WriteLine("Email map file not found: {0}", emailMapFile);
+                return false;
+            }
+            catch (XmlException e)
+            {
+                logger.WriteLine("Email map file is not valid XML: {0}", emailMapFile);
+                logger.WriteLine("XML error: {0}", e.Message);
+                return false;
+            }
+            catch (Exception e)
+            {
+                logger.WriteLine("Email map file could not be read: {0}", emailMapFile);
+                logger.WriteLine("Error: {0}", e.Message);
                 return false;
             }
             return true;

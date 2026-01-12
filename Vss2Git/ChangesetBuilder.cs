@@ -208,7 +208,23 @@ namespace Hpdi.Vss2Git
 
         private bool HasSameComment(Revision rev1, Revision rev2)
         {
-            return !string.IsNullOrEmpty(rev1.Comment) && rev1.Comment == rev2.Comment;
+            var comment1 = NormalizeComment(rev1.Comment);
+            if (comment1 == null)
+            {
+                return false;
+            }
+            var comment2 = NormalizeComment(rev2.Comment);
+            return comment2 != null && comment1 == comment2;
+        }
+
+        private static string NormalizeComment(string comment)
+        {
+            if (comment == null)
+            {
+                return null;
+            }
+            var trimmed = comment.Trim();
+            return trimmed.Length == 0 ? null : trimmed;
         }
 
         private void AddChangeset(Changeset change)

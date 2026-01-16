@@ -226,9 +226,27 @@ namespace Hpdi.Vss2Git
                 var pathMapper = new VssPathMapper();
 
                 // create mappings for root projects
+                string[] commonRootSegments = null;
+                if (collapsePath)
+                {
+                    var rootPaths = revisionAnalyzer.RootProjects.Select(x => x.Path).ToList();
+                    commonRootSegments = GetCommonPathSegments(rootPaths);
+                }
+
                 foreach (var rootProject in revisionAnalyzer.RootProjects)
                 {
-                    var rootPath = collapsePath ? repoPath : VssPathMapper.GetWorkingPath(repoPath, rootProject.Path);
+                    string rootPath;
+                    if (collapsePath)
+                    {
+                        var relativeSegments = GetRelativeSegments(rootProject.Path, commonRootSegments);
+                        rootPath = relativeSegments.Length == 0
+                            ? repoPath
+                            : Path.Combine(repoPath, Path.Combine(relativeSegments));
+                    }
+                    else
+                    {
+                        rootPath = VssPathMapper.GetWorkingPath(repoPath, rootProject.Path);
+                    }
                     pathMapper.SetProjectPath(rootProject.PhysicalName, rootPath, rootProject.Path);
                 }
 
@@ -782,6 +800,74 @@ namespace Hpdi.Vss2Git
                 }
             }
             return needCommit;
+        }
+
+        private static string[] GetRelativeSegments(string fullPath, string[] commonRootSegments)
+        {
+            var segments = SplitVssPath(fullPath);
+            if (commonRootSegments == null || commonRootSegments.Length == 0)
+            {
+                return segments;
+            }
+            if (segments.Length <= commonRootSegments.Length)
+            {
+                return new string[0];
+            }
+            return segments.Skip(commonRootSegments.Length).ToArray();
+        }
+
+        private static string[] GetCommonPathSegments(ICollection<string> vssPaths)
+        {
+            if (vssPaths == null || vssPaths.Count == 0)
+            {
+                return new string[0];
+            }
+
+            string[] common = null;
+            foreach (var path in vssPaths)
+            {
+                var segments = SplitVssPath(path);
+                if (common == null)
+                {
+                    common = segments;
+                    continue;
+                }
+
+                var minLength = Math.Min(common.Length, segments.Length);
+                var matchLength = 0;
+                for (int i = 0; i < minLength; i++)
+                {
+                    if (!common[i].Equals(segments[i], StringComparison.OrdinalIgnoreCase))
+                    {
+                        break;
+                    }
+                    matchLength++;
+                }
+                if (matchLength == 0)
+                {
+                    return new string[0];
+                }
+                if (matchLength != common.Length)
+                {
+                    common = common.Take(matchLength).ToArray();
+                }
+            }
+
+            return common ?? new string[0];
+        }
+
+        private static string[] SplitVssPath(string vssPath)
+        {
+            if (string.IsNullOrEmpty(vssPath) || vssPath == "$")
+            {
+                return new string[0];
+            }
+
+            if (vssPath.StartsWith("$/"))
+            {
+                vssPath = vssPath.Substring(2);
+            }
+            return vssPath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private bool WriteRevisionTo(string physical, int version, string destPath)
